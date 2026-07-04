@@ -11,6 +11,9 @@ Example input format:
             {"u": 4, "v": 1, "cost": 4}
         ]
     }
+
+>>> from graphy import Graph
+>>> g = Graph()
 """
 
 from dataclasses import dataclass
@@ -61,6 +64,10 @@ class Graph:
         edge.u.neighbors.append(edge)
         edge.v.neighbors.append(edge)
         self.edges.append(edge)
+
+    @property
+    def order(self):
+        return len(self.nodes)
 
     def __iter__(self):
         return iter(self.nodes)
