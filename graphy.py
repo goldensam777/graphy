@@ -1,5 +1,6 @@
 """
 graphy - graph theory library
+References: check @.notes/"Graph Theory" for more information.
 
 Example input format:
     graph = {
