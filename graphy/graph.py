@@ -1,67 +1,11 @@
 """
-graphy ~ graph theory library
-References: check @.notes/"Graph Theory" for more information.
-
-Example input format:
-    graph = {
-        "nodes": [1, 2, 3, 4],
-        "edges": [
-            {"u": 1, "v": 2, "cost": 5},
-            {"u": 2, "v": 3, "cost": 3},
-            {"u": 3, "v": 4, "cost": 2},
-            {"u": 4, "v": 1, "cost": 4}
-        ]
-    }
-
->>> from graphy import Graph, Node, Edge
->>> g = Graph()
->>> a, b = Node(1), Node(2)
->>> g.add_edge(Edge(a, b, cost=5))
->>> g.degree(a)
-1
+Undirected graph: Graph (§1.1, connectivity/cyclomatic number §1.3).
 """
 
-from dataclasses import dataclass
-from collections import deque
 import random
+from collections import deque
 
-
-class Node:
-    """Graph vertex. Hashable by value: used as a key in Graph/Digraph
-    adjacency dicts."""
-
-    def __init__(self, value):
-        self.value = value
-
-    def __hash__(self):
-        return hash(self.value)
-
-    def __eq__(self, other):
-        return isinstance(other, Node) and self.value == other.value
-
-    def __repr__(self):
-        return f"Node({self.value!r})"
-
-
-@dataclass
-class Edge:
-    """Undirected edge {u, v}, optionally weighted.
-
-    No custom __hash__/__eq__: undirectedness is carried by Graph.adj
-    (adj[u][v] and adj[v][u] reference the same edge), not by the Edge
-    object itself.
-    """
-    u: Node
-    v: Node
-    cost: float = 0
-
-
-@dataclass
-class Arc(Edge):
-    """Directed edge (u -> v). Distinct from Edge only by type, used to
-    enforce that directed/undirected edges are never mixed in
-    Graph.add_edge / Digraph.add_edge."""
-    pass
+from .entities import Arc
 
 
 class Graph:
@@ -193,85 +137,3 @@ class Graph:
     def cycle(self):
         """Return a cycle in the graph, if one exists, else None."""
         return self.random_cycle()
-
-
-class Digraph(Graph):
-    """Directed graph / digraph.
-
-    Two separate dicts: adj (successors) and pred (predecessors) —
-    needed independently for Dijkstra and topological/level-based
-    ordering on a DAG.
-    """
-
-    def __init__(self):
-        super().__init__()
-        self.pred = {}  # {Node: {Node: [Arc, ...]}}
-
-    def add_node(self, node):
-        super().add_node(node)
-        self.pred.setdefault(node, {})
-
-    def add_edge(self, edge):
-        if not isinstance(edge, Arc):
-            raise ValueError("Digraph accepts only Arc objects.")
-        u, v = edge.u, edge.v
-        self.add_node(u)
-        self.add_node(v)
-        self.adj[u].setdefault(v, []).append(edge)
-        self.pred[v].setdefault(u, []).append(edge)
-        self._edges.append(edge)
-
-    def remove_edge(self, edge):
-        u, v = edge.u, edge.v
-        self.adj[u][v].remove(edge)
-        if not self.adj[u][v]:
-            del self.adj[u][v]
-        self.pred[v][u].remove(edge)
-        if not self.pred[v][u]:
-            del self.pred[v][u]
-        self._edges.remove(edge)
-
-    def successors(self, node):
-        return list(self.adj[node].keys())
-
-    def predecessors(self, node):
-        return list(self.pred[node].keys())
-
-    def out_degree(self, node):
-        return sum(len(edges) for edges in self.adj[node].values())
-
-    def in_degree(self, node):
-        return sum(len(edges) for edges in self.pred[node].values())
-
-    def degree(self, node):
-        # Directed analogue of the handshaking lemma: no factor of 2,
-        # each arc is either outgoing or incoming, never both.
-        return self.out_degree(node) + self.in_degree(node)
-
-    def __repr__(self):
-        return f"Digraph(n={self.order}, m={len(self._edges)})"
-
-
-class Tree(Graph):
-    """Tree: connected graph with no cycle and no loop.
-
-    Built from an existing Graph, validating the invariants of the
-    tree proposition (|E| = n - 1) plus connectivity — |E| = n - 1
-    alone doesn't guarantee it's a tree (it only guarantees acyclicity
-    IF the graph is also connected).
-    """
-
-    def __init__(self, graph: Graph):
-        super().__init__()
-        self.adj = graph.adj
-        self._edges = list(graph.edges)
-
-        if len(self._edges) != self.order - 1:
-            raise ValueError(
-                f"Not a tree: |E|={len(self._edges)} != n-1={self.order - 1}."
-            )
-        if not self.is_connected():
-            raise ValueError("Not a tree: the graph is not connected.")
-
-    def __repr__(self):
-        return f"Tree(n={self.order}, m={len(self._edges)})"
