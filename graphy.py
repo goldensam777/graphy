@@ -1,5 +1,5 @@
 """
-graphy - graph theory library
+graphy ~ graph theory library
 References: check @.notes/"Graph Theory" for more information.
 
 Example input format:
@@ -23,6 +23,7 @@ Example input format:
 
 from dataclasses import dataclass
 from collections import deque
+import random
 
 
 class Node:
@@ -163,6 +164,35 @@ class Graph:
 
     def __repr__(self):
         return f"Graph(n={self.order}, m={len(self._edges)})"
+
+    def random_cycle(self):
+        """Return a random cycle in the graph, if one exists, else None."""
+        if self.cyclomatic_number() == 0:
+            return None
+
+        # Random walk until we hit a visited node, then backtrack to form a cycle.
+        start = random.choice(self.nodes)
+        visited = {start: None}  # node -> predecessor
+        current = start
+        while True:
+            neighbors = list(self.adj[current].keys())
+            next_node = random.choice(neighbors)
+            if next_node in visited:
+                # Cycle found: backtrack to form the cycle path.
+                cycle = [next_node]
+                while current != next_node:
+                    cycle.append(current)
+                    current = visited[current]
+                cycle.append(next_node)
+                cycle.reverse()
+                return cycle
+            visited[next_node] = current
+            current = next_node
+
+    @property
+    def cycle(self):
+        """Return a cycle in the graph, if one exists, else None."""
+        return self.random_cycle()
 
 
 class Digraph(Graph):

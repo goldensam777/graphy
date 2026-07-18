@@ -3,31 +3,31 @@
 ### 1.1. Definitions and Ontology
 
 - **An undirected graph $G = (V, E)$ consists of a finite set $V = \{v_1, v_2, \dots, v_n\}$** whose elements are called vertices (or nodes) and a finite family $E = \{e_1, e_2, \dots, e_m\}$ whose elements are called edges. Each edge is associated with an unordered pair of vertices representing its endpoints.
-    
+
 - We write $e = \{u, v\}$ or $e = uv$ interchangeably. If $e = \{u, v\}$, we say that $u$ and $v$ are neighbors, adjacent, or incident to $e$, and that $e$ is incident to $u$ and $v$.
-    
+
 - The pair associated with an edge can also be a repetition of the same vertex, in which case it is called a **loop** ($e = \{v, v\}$).
-    
+
 - A vertex with no incident edges is called **isolated**. A vertex incident to exactly one edge is a **pendant vertex** (or leaf), and its incident edge is a **pendant edge**.
-    
+
 - If multiple edges are incident to the same two vertices, they are called **parallel edges** or **multiple edges**. We also refer to this as a family of edges.
-    
+
 - If an undirected graph **contains at least one loop or parallel edge**, it is called a **multigraph**. A graph with no parallel edges and no loops is a **simple graph**.
-    
+
 - The **order** of a graph is its number of vertices $n = |V|$.
 
 Programming:
 
 ```python
 class Node:
-	pass
-	
+    pass
+
 class Edge:
-	pass
-	
+    pass
+
 class Graph:
-	def __init__(self, order: int, edges: set[Edge], nodes: set[Node]):
-		pass
+    def __init__(self, order: int, edges: set[Edge], nodes: set[Node]):
+        pass
 ```
 
 #### 1.1.1. Graphical Representations
@@ -37,21 +37,21 @@ class Graph:
 #### 1.1.2. Walks, Trails, Paths, and Cycles
 
 - Let $G = (V, E)$ be a graph where $V$ is the set of vertices and $E$ is the set of edges.
-    
+
 - **A walk in a graph is an alternating sequence of vertices and edges starting with a vertex and ending with a vertex, such that each edge is flanked by its endpoints.**
-    
+
 - A walk is **simple** (often called a **trail** in English) if **it uses each of its edges at most once.**
-    
+
 - A walk is **elementary** (often called a **path** in English) if **it visits each of its vertices at most once.**
-    
+
 - **A cycle (or circuit/closed trail) in a graph is an alternating sequence of vertices and edges starting at a vertex $v_i$ and ending at that same vertex $v_i$.**
-    
+
 - A cycle is **simple** (often called a **circuit**) if **it uses each of its edges at most once.**
-    
+
 - **A cycle is elementary (or a simple cycle) if it visits each of its vertices at most once (except for the start and end vertex).**
-    
+
 - The length $l$ of a walk/trail/path is the **number of edges it contains.**
-    
+
 
 #### 1.1.3. Key Concepts
 
