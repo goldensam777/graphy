@@ -6,7 +6,7 @@ from .entities import Arc
 from .graph import Graph
 
 
-class Digraph(Graph):
+class Digraph(Graph): 
     """Directed graph / digraph.
 
     Two separate dicts: adj (successors) and pred (predecessors) —
