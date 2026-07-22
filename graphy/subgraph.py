@@ -52,3 +52,17 @@ class Subgraph(Graph):
 
     def __repr__(self):
         return f"Subgraph(n={self.order}, m={len(self._edges)})"
+
+
+class SpanningGraph(Graph):
+    """Graph with all nodes, but not all edges"""
+    def __init__(self, parent: Graph):
+        super().__init__()
+        if len(parent.edges) >0:
+            self.edges = self.subset_edges(parent.edges)
+
+
+    @classmethod
+    def subset_edges(self, edges):
+        """Random subsetting for a spanning graph"""
+        pass

@@ -3,6 +3,7 @@ Tree (§1.4).
 """
 
 from .graph import Graph
+from .subgraph import SpanningGraph
 
 
 class Tree(Graph):
@@ -26,5 +27,17 @@ class Tree(Graph):
         if not self.is_connected():
             raise ValueError("Not a tree: the graph is not connected.")
 
+    # TODO: Implement valued tree and oriented ones, and also complete lines 36-*
+
     def __repr__(self):
         return f"Tree(n={self.order}, m={len(self._edges)})"
+
+
+class SpanningTree(Tree, SpanningGraph):
+    def __init__(self, graph):
+        super().__init__(graph)
+        self.spanning_tree = self.render_tree(graph)
+
+    @classmethod
+    def render_tree(self, graph):
+        pass
