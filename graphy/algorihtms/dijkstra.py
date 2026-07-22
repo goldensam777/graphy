@@ -11,10 +11,10 @@ def dijkstra(digraph: Digraph, source: Node) -> tuple[dict[Node, float], dict[No
     """
     lam = costs(digraph, source)
     pred = {v: None for v in digraph.nodes}
-    S = set()
-    while len(S) < len(digraph.nodes):
+    s = set()
+    while len(s) < len(digraph.nodes):
         i = min({v for v in digraph.nodes if v not in S}, key=lam.get)
-        S.add(i)
+        s.add(i)
         for j, arcs in digraph.adj[i].items():
             for arc in arcs:
                 relax(lam, pred, i, j, arc.cost)
