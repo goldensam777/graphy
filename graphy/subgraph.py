@@ -55,14 +55,32 @@ class Subgraph(Graph):
 
 
 class SpanningGraph(Graph):
-    """Graph with all nodes, but not all edges"""
-    def __init__(self, parent: Graph):
+    """Spanning subgraph (graphe partiel) of a parent Graph (§1.2.2).
+
+    Mirrors Subgraph the other way round: Subgraph fixes the node
+    subset S' and derives A' (induced). SpanningGraph fixes an edge
+    subset A' and keeps S' = S — every node of the parent, spanning by
+    construction, regardless of which edges were chosen.
+
+    Built as an independent, frozen copy — same pattern as Subgraph
+    and Tree(graph) — not a live view onto the parent.
+    """
+
+    def __init__(self, parent: Graph, edges):
         super().__init__()
-        if len(parent.edges) >0:
-            self.edges = self.subset_edges(parent.edges)
+        edges = list(edges)
+        # Edge has no __hash__ (dataclass default disables it once
+        # __eq__ is generated), so membership is checked by identity.
+        parent_edge_ids = {id(e) for e in parent.edges}
+        for edge in edges:
+            if id(edge) not in parent_edge_ids:
+                raise ValueError("SpanningGraph: all edges must belong to the parent graph.")
 
+        for node in parent.nodes:
+            self.add_node(node)
+        for edge in edges:
+            self.add_edge(edge)
 
-    @classmethod
-    def subset_edges(self, edges):
-        """Random subsetting for a spanning graph"""
-        pass
+    def __repr__(self):
+        return f"SpanningGraph(n={self.order}, m={len(self._edges)})"
+

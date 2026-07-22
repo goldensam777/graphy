@@ -33,11 +33,26 @@ class Tree(Graph):
         return f"Tree(n={self.order}, m={len(self._edges)})"
 
 
-class SpanningTree(Tree, SpanningGraph):
-    def __init__(self, graph):
-        super().__init__(graph)
-        self.spanning_tree = self.render_tree(graph)
+class SpanningTree(Tree):
+    """Spanning tree of `parent` (§1.2.2 + §1.4 combined): a Tree
+    whose node set is exactly parent's node set.
 
-    @classmethod
-    def render_tree(self, graph):
-        pass
+    Deliberately single inheritance -- NOT SpanningTree(Tree,
+    SpanningGraph). Tree and SpanningGraph don't share a compatible
+    __init__ contract, so combining them via multiple inheritance
+    creates a MRO where Tree's internal super().__init__() call
+    resolves into SpanningGraph instead of Graph, and crashes
+    (missing the `parent` argument SpanningGraph needs).
+
+    Composition avoids that entirely: build the SpanningGraph first
+    (validates edges belong to parent + keeps every node), then hand
+    it to Tree's own constructor, which validates the tree invariants
+    (|E| = n-1, connected) on top.
+    """
+
+    def __init__(self, parent: Graph, edges):
+        spanning = SpanningGraph(parent, edges)
+        super().__init__(spanning)
+
+    def __repr__(self):
+        return f"SpanningTree(n={self.order}, m={len(self._edges)})"
