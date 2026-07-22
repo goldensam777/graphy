@@ -24,3 +24,19 @@ def relax(lam: dict[Node, float], pred: dict[Node, Node], i: Node, j: Node, cost
         pred[j] = i
         return True
     return False
+
+
+def shortest_path(pred: dict[Node, Node], source: Node, target: Node) -> list[Node] | None:
+    """Reconstruct the path source -> target from a pred dict built by
+    a shortest-path algorithm (e.g. dijkstra). Returns None if target
+    is unreachable from source."""
+    if target == source:
+        return [source]
+    if pred.get(target) is None:
+        return None
+    path = [target]
+    while path[-1] != source:
+        path.append(pred[path[-1]])
+    path.reverse()
+    return path
+
