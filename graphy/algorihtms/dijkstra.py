@@ -13,7 +13,7 @@ def dijkstra(digraph: Digraph, source: Node) -> tuple[dict[Node, float], dict[No
     pred = {v: None for v in digraph.nodes}
     s = set()
     while len(s) < len(digraph.nodes):
-        i = min({v for v in digraph.nodes if v not in S}, key=lam.get)
+        i = min({v for v in digraph.nodes if v not in s}, key=lam.get)
         s.add(i)
         for j, arcs in digraph.adj[i].items():
             for arc in arcs:
