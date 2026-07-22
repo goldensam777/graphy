@@ -25,5 +25,6 @@ from .entities import Node, Edge, Arc
 from .graph import Graph
 from .digraph import Digraph
 from .tree import Tree
+from .subgraph import Subgraph
 
-__all__ = ["Node", "Edge", "Arc", "Graph", "Digraph", "Tree"]
+__all__ = ["Node", "Edge", "Arc", "Graph", "Digraph", "Tree", "Subgraph"]
